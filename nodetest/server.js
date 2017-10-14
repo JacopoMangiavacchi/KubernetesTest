@@ -2,6 +2,7 @@
 var express    = require('express');        // call express
 var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
+var request    = require('request');
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
@@ -18,6 +19,16 @@ var router = express.Router();              // get an instance of the express Ro
 router.get('/language', function(req, res) {
     res.json({ language: 'javascript' });   
 });
+
+
+router.post('/request', function(req, res) {
+    request(req.body.url, function (error, response, body) {
+        if (!error) {
+            res.json({ language: JSON.parse(body).language });   
+        }
+    });
+});
+
 
 // more routes for our API will happen here
 
