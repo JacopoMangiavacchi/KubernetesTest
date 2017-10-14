@@ -30,7 +30,11 @@ Test docker image:
 
 Push docker image on Hub Docker:
 
-	
+	docker login
+
+	docker tag swifttest [USER]/swifttest
+
+	docker push [USER]/swifttest
 
 
 
