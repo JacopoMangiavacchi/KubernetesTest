@@ -62,6 +62,8 @@ Create Kubernetes Pods:
 
 	kubectl get pod
 
+	kubectl get service
+
 	kubectl proxy
 
 
