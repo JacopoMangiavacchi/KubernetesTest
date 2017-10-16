@@ -14,7 +14,7 @@ def create_request():
     if not request.json or not 'url' in request.json:
         abort(400)
     url = request.json['url']
-    result = grequests.map([grequests.get('http://google.com')])
+    result = grequests.map([grequests.get(url)])
     
     print(result[0].content)
     
