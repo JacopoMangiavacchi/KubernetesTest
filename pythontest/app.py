@@ -1,5 +1,6 @@
 #!flask/bin/python
 from flask import Flask, jsonify, abort, request
+import grequests
 
 app = Flask(__name__)
 
@@ -12,7 +13,15 @@ def get_language():
 def create_request():
     if not request.json or not 'url' in request.json:
         abort(400)
+    url = request.json['url']
+    result = grequests.map([grequests.get('http://google.com')])
+    
+    print(result[0].content)
+    
     return jsonify({'language': 'Python'})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8070)
+
+import grequests
+
