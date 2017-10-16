@@ -1,11 +1,9 @@
 # swifttest
 
 
-Setup Python + Flask:
+Use Python 3.6 via Anaconda and install Sanic for Async IO support
 
-	virtualenv flask
-
-	flask/bin/pip install flask
+	pip install sanic
 
 
 Local test: 
