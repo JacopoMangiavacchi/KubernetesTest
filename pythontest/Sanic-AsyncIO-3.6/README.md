@@ -4,6 +4,7 @@
 Use Python 3.6 via Anaconda and install Sanic for Async IO support
 
 	pip install sanic
+	pip install request
 
 
 Local test: 

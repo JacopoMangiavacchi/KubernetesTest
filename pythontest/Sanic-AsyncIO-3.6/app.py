@@ -1,5 +1,5 @@
 from sanic import Sanic, response
-import grequests
+import requests
 
 app = Sanic(__name__)
 
@@ -7,18 +7,17 @@ app = Sanic(__name__)
 async def get_language(request):
     return response.json({'language': 'Python'})
 
-
 @app.route('/request', methods=['POST'])
-async def get_language(request):
-    if not request.json or not 'url' in request.json:
+async def get_language(req):
+    if not req.json or not 'url' in req.json:
         return response.text(body= '', status=404)
-    url = request.json['url']
+    url = req.json['url']
     
-    result = grequests.map([grequests.get('http://google.com')])
-    
-    print(result[0].content)
+    result = requests.get(url)
+
+    print(result)
     
     return response.json({'language': 'Python'})
 
 
-app.run(host="0.0.0.0", port=8070)
+app.run(host="0.0.0.0", port=8070, workers=4)
