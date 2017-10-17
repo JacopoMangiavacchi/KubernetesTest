@@ -1,8 +1,12 @@
 package javatest;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+@JsonDeserialize
 public class Language {
 
-    private final String language;
+    private String language;
+
+    public Language() {};
 
     public Language(String language) {
         this.language = language;
@@ -10,5 +14,9 @@ public class Language {
 
     public String getLanguage() {
         return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 }
