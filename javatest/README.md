@@ -1,15 +1,11 @@
-# swifttest
-
-
-Use Python 3.6 via Anaconda and install Sanic for Async IO support
-
-	pip install sanic
-	pip install request
+# javatest
 
 
 Local test: 
 
-	python app.py
+	./gradlew build
 
-	curl -H "Content-Type: application/json" -X POST -d '{"url" : "http://localhost:8080/language"}' http://localhost:8080/request
+	java -jar build/libs/javatest-0.1.0.jar
+
+	curl -H "Content-Type: application/json" -X POST -d '{"url" : "http://localhost:8060/language"}' http://localhost:8060/request
 
