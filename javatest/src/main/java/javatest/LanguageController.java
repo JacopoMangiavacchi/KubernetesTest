@@ -3,6 +3,8 @@ package javatest;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 public class LanguageController {
@@ -10,5 +12,9 @@ public class LanguageController {
     @RequestMapping("/language")
     public Language language() {
         return new Language("Java");
+    }
+    @RequestMapping(value="/request", method=RequestMethod.POST)
+    public Language request(@RequestBody Request request) {
+        return new Language(request.getUrl());
     }
 }
