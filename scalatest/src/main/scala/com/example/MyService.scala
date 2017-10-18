@@ -24,13 +24,14 @@ class MyServiceActor extends Actor with MyService {
 
 
 case class Language(language: String)
+case class Request(url: String)
 
-object LanguageJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
-   implicit val PortofolioFormats = jsonFormat1(Language)
+object MyServiceJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
+   implicit val LanguageFormats = jsonFormat1(Language)
+   implicit val RequestFormats = jsonFormat1(Request)
 }
 
-import LanguageJsonSupport._
-
+import MyServiceJsonSupport._
 
 // this trait defines our service behavior independently from the service actor
 trait MyService extends HttpService {
@@ -39,9 +40,19 @@ trait MyService extends HttpService {
     path("language") {
       get {
         var u = Language("Scala")
+        complete {
+          u
+        }
+      }
+    }  ~ 
+    path("request") {
+      post {
+        entity(as[Request]) { request =>
+          var u = Language("Scala")
           complete {
             u
           }
+        }
       }
     }
 }
