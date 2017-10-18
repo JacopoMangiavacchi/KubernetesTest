@@ -7,6 +7,11 @@ import spray.json._
 import DefaultJsonProtocol._
 import MediaTypes._
 import spray.httpx.SprayJsonSupport
+import spray.client.pipelining._
+import scala.concurrent.Future
+import spray.httpx.encoding.{Deflate}
+import scala.util.{Failure, Success}
+
 
 // we don't implement our route structure directly in the service actor because
 // we want to be able to test it independently, without having to spin up an actor
@@ -22,19 +27,21 @@ class MyServiceActor extends Actor with MyService {
   def receive = runRoute(myRoute)
 }
 
-
 case class Language(language: String)
 case class Request(url: String)
 
 object MyServiceJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
-   implicit val LanguageFormats = jsonFormat1(Language)
-   implicit val RequestFormats = jsonFormat1(Request)
+   implicit val languageFormat = jsonFormat1(Language)
+   implicit val requestFormat = jsonFormat1(Request)
 }
 
 import MyServiceJsonSupport._
 
 // this trait defines our service behavior independently from the service actor
 trait MyService extends HttpService {
+
+  val system = akka.actor.ActorSystem()
+  import system.dispatcher // execution context for futures
 
   val myRoute =
     path("language") {
@@ -48,9 +55,18 @@ trait MyService extends HttpService {
     path("request") {
       post {
         entity(as[Request]) { request =>
-          var u = Language("Scala")
-          complete {
-            u
+          val pipeline: HttpRequest => Future[Language] = (
+            sendReceive
+            ~> decode(Deflate)
+            ~> unmarshal[Language]
+          )
+
+          val responseFuture: Future[Language] = pipeline(Get(request.url))
+
+          onComplete(responseFuture) { responseLanguage =>
+            complete {
+              responseLanguage
+            }
           }
         }
       }
