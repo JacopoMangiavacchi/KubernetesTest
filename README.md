@@ -23,7 +23,11 @@ Each of these services expose the following API
 
 TEST:
 
-  curl -H "Content-Type: application/json" -X POST -d '{"url" : "http://localhost:[PORT]/language"}' http://localhost:[PORT]/request
+    curl -H "Content-Type: application/json" -X POST -d '{"url" : "http://localhost:[PORT]/language"}' http://localhost:[PORT]/request
   
  
+Dockers and Kubernetes:
+
+For each platforms configuration files and readme instructions are provided in order to create the container, publish it on registry and create a Kubernetes pod
+
  
