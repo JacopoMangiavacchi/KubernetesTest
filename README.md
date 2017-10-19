@@ -12,7 +12,7 @@ Implementation of the same Rest microservice in the following languages/platform
 - Kotlin: Spring
 - C#: .Net WebApi
 - TypeScript: Node.JS
-- Go
+- Go: Gorilla Mux
 
 
 Each of these services expose the following API
