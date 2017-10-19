@@ -8,7 +8,9 @@ Local test:
 
 	go get
 
-	$GOPATH/bin/gotest
+	go build
+
+	./gotest
 	
 	curl -H "Content-Type: application/json" -X POST -d '{"url" : "http://localhost:8040/language"}' http://localhost:8040/request
 

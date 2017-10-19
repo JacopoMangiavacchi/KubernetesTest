@@ -1,27 +1,37 @@
 package main
 
 import (
-    "fmt"
+    "encoding/json"
     "log"
     "net/http"
 
     "github.com/gorilla/mux"
 )
 
+type Language struct {
+	Language  string `json:"language"`
+}
+
+type Request struct {
+	Url  string `json:"url"`
+}
+
 func main() {
 
     router := mux.NewRouter().StrictSlash(true)
-    router.HandleFunc("/language", Language)
-    router.HandleFunc("/request", Request)
+    router.HandleFunc("/language", HandleLanguage)
+    router.HandleFunc("/request", HandleRequest)
 
     log.Fatal(http.ListenAndServe(":8040", router))
 }
 
-func Language(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintln(w, "Go")
+func HandleLanguage(w http.ResponseWriter, r *http.Request) {
+    language := Language{Language: "Go"}
+    json.NewEncoder(w).Encode(language)
 }
 
-func Request(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintln(w, "Go")
+func HandleRequest(w http.ResponseWriter, r *http.Request) {
+    language := Language{Language: "Go"}
+    json.NewEncoder(w).Encode(language)
 }
 
