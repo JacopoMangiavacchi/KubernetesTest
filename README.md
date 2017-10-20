@@ -9,10 +9,10 @@ Implementation of the same Rest microservice in the following languages/platform
 - Python: Sanic
 - Java: Spring
 - Scala: Spray, Akka
+- Go: Gorilla Mux
 - Kotlin: Spring
 - C#: .Net WebApi
 - TypeScript: Node.JS
-- Go: Gorilla Mux
 
 
 Each of these services expose the following API
