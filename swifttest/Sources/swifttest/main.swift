@@ -1,13 +1,27 @@
 import Foundation
 import Kitura
-import SwiftyJSON
+//import SwiftyJSON
+
+
+struct Language : Codable {
+    var language: String
+}
+
+struct Request : Codable {
+    var url: String
+}
+
 
 // Create a new router
 let router = Router()
 
 // Handle HTTP GET requests to /
 router.get("/language") { request, response, next in
-    response.send(json: JSON(["language" : "Swift"]))
+    let language = Language(language: "Swift")
+
+    response.send(data: try JSONEncoder().encode(language))
+    // use SwiftyJSON
+    //response.send(json: JSON(["language" : "Swift"]))
     next()
 }
 
@@ -37,8 +51,16 @@ router.post("/request") { request, response, next in
                     if let httpStatus = response2 as? HTTPURLResponse {
                         if httpStatus.statusCode == 200 {
                             do {
-                                let jsonResponse = JSON(data: data)
-                                try response.status(.OK).send(json: JSON(["language" : jsonResponse["language"]])).end()
+                                //directly send back the json body with no marshaling
+                                try response.status(.OK).send(data: data).end()
+
+                                //unmarshal from data to json and marshal again from json to data
+                                // let language = try JSONDecoder().decode(Language.self, from: data)
+                                // try response.status(.OK).send(data: JSONEncoder().encode(language)).end()
+
+                                // use SwiftyJSON
+                                // let jsonResponse = JSON(data: data)
+                                // try response.status(.OK).send(json: JSON(["language" : jsonResponse["language"]])).end()
                             }
                             catch {
                             }
