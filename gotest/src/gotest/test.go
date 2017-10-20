@@ -33,6 +33,7 @@ func HandleLanguage(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleRequest(w http.ResponseWriter, r *http.Request) {
+    // Unmarshal the Json Body in a Request type
     var request Request
     body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
     if err != nil {
@@ -49,10 +50,34 @@ func HandleRequest(w http.ResponseWriter, r *http.Request) {
         }
     }
 
-    log.Printf(request.Url)
+    // Build the request
+	req, err := http.NewRequest("GET", request.Url, nil)
+	if err != nil {
+		log.Fatal("NewRequest: ", err)
+		return
+	}
 
+	client := &http.Client{}
 
-    language := Language{Language: "Go"}
-    json.NewEncoder(w).Encode(language)
+	// Send an HTTP request and
+	// returns an HTTP response
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Fatal("Do: ", err)
+		return
+	}
+
+	// Defer the closing of the body
+	defer resp.Body.Close()
+
+    // Fill the language response with the data from the JSON
+	var languareResponse Language
+
+    // Use json.Decode for reading streams of JSON data
+    if err := json.NewDecoder(resp.Body).Decode(&languareResponse); err != nil {
+        log.Println(err)
+    }
+
+    json.NewEncoder(w).Encode(languareResponse)
 }
 
