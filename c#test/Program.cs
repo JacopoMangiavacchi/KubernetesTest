@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Routing;
-
+using Newtonsoft.Json;
 
 namespace csharptest
 {
@@ -22,6 +22,11 @@ namespace csharptest
         }
     }
 
+    public class Language
+    {
+        public string language { get; set; }
+    }
+
     public class Startup
     {
         public void ConfigureServices(IServiceCollection services)
@@ -34,7 +39,13 @@ namespace csharptest
             var routeBuilder = new RouteBuilder(app);
 
             routeBuilder.MapGet("language", context => {
-                return context.Response.WriteAsync("C#");
+                Language language = new Language();
+                language.language = "C#";
+
+                string response = JsonConvert.SerializeObject(language);
+                //string response = JsonConvert.SerializeObject(new { language = "C#" });
+
+                return context.Response.WriteAsync(response);                
             });
 
             routeBuilder.MapPost("request", context => {
@@ -44,4 +55,5 @@ namespace csharptest
             var routes = routeBuilder.Build();
             app.UseRouter(routes);
         }
-    }}
+    }
+}
