@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -27,6 +29,11 @@ namespace csharptest
         public string language { get; set; }
     }
 
+    public class Request
+    {
+        public string url { get; set; }
+    }
+
     public class Startup
     {
         public void ConfigureServices(IServiceCollection services)
@@ -49,6 +56,19 @@ namespace csharptest
             });
 
             routeBuilder.MapPost("request", context => {
+                //Get JSON Body
+                string bodyAsString;
+                using (var streamReader = new StreamReader(context.Request.Body, Encoding.UTF8))
+                {
+                    bodyAsString = streamReader.ReadToEnd();
+                }
+
+                Request request = JsonConvert.DeserializeObject<Request>(bodyAsString);
+
+                //Call GET language url
+                
+
+
                 return context.Response.WriteAsync("C#");
             });
 
