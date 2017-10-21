@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Routing;
 using Newtonsoft.Json;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace csharptest
 {
@@ -55,7 +57,7 @@ namespace csharptest
                 return context.Response.WriteAsync(response);                
             });
 
-            routeBuilder.MapPost("request", context => {
+            routeBuilder.MapPost("request", async (context) => {
                 //Get JSON Body
                 string bodyAsString;
                 using (var streamReader = new StreamReader(context.Request.Body, Encoding.UTF8))
@@ -66,10 +68,17 @@ namespace csharptest
                 Request request = JsonConvert.DeserializeObject<Request>(bodyAsString);
 
                 //Call GET language url
-                
+                var client = new HttpClient();
+                var stringTask = client.GetStringAsync(request.url);
+                var languageText = await stringTask;
+                // await context.Response.WriteAsync(languageText);
 
+                //unmarshal from data to json and marshal again from json to data
+                // var language = JsonConvert.DeserializeObject(languageText);
+                // string responseText = JsonConvert.SerializeObject(language);
+                // await context.Response.WriteAsync(responseText);
 
-                return context.Response.WriteAsync("C#");
+                return;
             });
 
             var routes = routeBuilder.Build();
