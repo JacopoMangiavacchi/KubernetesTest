@@ -1,4 +1,6 @@
 import * as express from 'express'
+import * as bodyParser from "body-parser"
+import * as request from 'request'
 
 class Language {
   language: string
@@ -6,6 +8,10 @@ class Language {
   constructor (language: string) {
     this.language = language
   }
+}
+
+interface Request {
+  url: string
 }
 
 class App {
@@ -18,11 +24,25 @@ class App {
 
   private mountRoutes (): void {
     const router = express.Router()
+
     router.get('/language', (req, res) => {
       let language = new Language("TypeScript")
 
       res.json(language)
     })
+
+    router.post('/request', (req, res) => {
+      let passedRequest: Request = req.body as Request
+
+      request(passedRequest.url, (error: any, response: any, body: any) => {
+          if (!error) {
+            let language: Language = JSON.parse(body) as Language
+            res.json(language);   
+          }
+      });
+    })
+
+    this.express.use(bodyParser.json())
     this.express.use('/', router)
   }
 

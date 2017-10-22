@@ -3,9 +3,9 @@
 
 Local test: 
 
-	node server.js
+	node dist/server.js
 
-	curl -H "Content-Type: application/json" -X POST -d '{"url" : "http://localhost:8090/language"}' http://localhost:8090/request
+	curl -H "Content-Type: application/json" -X POST -d '{"url" : "http://localhost:8020/language"}' http://localhost:8020/request
 
 
 
@@ -18,7 +18,7 @@ Test docker image:
 
 	docker run -p 8091:8090 nodetest
 
-	curl -H "Content-Type: application/json" -X POST -d '{"url" : "http://localhost:8090/language"}' http://localhost:8091/request
+	curl -H "Content-Type: application/json" -X POST -d '{"url" : "http://localhost:8020/language"}' http://localhost:8020/request
 
 	docker ps
 	
@@ -40,7 +40,7 @@ Test docker Pull:
 
 	docker run -p 8091:8090 [USER]/nodetest
 
-	curl -H "Content-Type: application/json" -X POST -d '{"url" : "http://localhost:8090/language"}' http://localhost:8091/request
+	curl -H "Content-Type: application/json" -X POST -d '{"url" : "http://localhost:8020/language"}' http://localhost:8020/request
 
 	docker ps
 	
@@ -64,7 +64,7 @@ Create Kubernetes Pods:
 
 Bluemix Test:
 
-	curl -H "Content-Type: application/json" -X POST -d '{"url" : "http://localhost:8090/language"}' http://173.193.105.232:31039/request
+	curl -H "Content-Type: application/json" -X POST -d '{"url" : "http://localhost:8020/language"}' http://173.193.105.232:31039/request
 
 Minikube test:
 

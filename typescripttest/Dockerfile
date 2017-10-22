@@ -12,4 +12,4 @@ RUN mkdir /root/nodetest
 COPY . /root/nodetest
 
 # Command to start Node.JS application
-CMD [ "sh", "-c", "cd /root/nodetest && node server.js" ]
+CMD [ "sh", "-c", "cd /root/nodetest && node dist/server.js" ]
