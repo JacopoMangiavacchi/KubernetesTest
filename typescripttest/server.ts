@@ -1,5 +1,13 @@
 import * as express from 'express'
 
+class Language {
+  language: string
+
+  constructor (language: string) {
+    this.language = language
+  }
+}
+
 class App {
   public express: express.Express
 
@@ -11,9 +19,9 @@ class App {
   private mountRoutes (): void {
     const router = express.Router()
     router.get('/language', (req, res) => {
-      res.json({
-        language: 'TypeScript'
-      })
+      let language = new Language("TypeScript")
+
+      res.json(language)
     })
     this.express.use('/', router)
   }
