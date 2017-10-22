@@ -7,12 +7,11 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import java.util.concurrent.atomic.AtomicLong
+import org.springframework.web.client.RestTemplate
 
 
-data class Language(val language: String)
+data class Language(var language: String = "")
 data class Request(var url: String = "")
-
 
 @SpringBootApplication
 class Application
@@ -22,13 +21,17 @@ fun main(args: Array<String>) {
     SpringApplication.run(Application::class.java, *args)
 }
 
-
 @RestController
 class GreetingController {
-
     @GetMapping("/language")
     fun getLanguage() = Language("Kotlin")
 
     @PostMapping("/request")
-    fun postRequest(@RequestBody request: Request) = Language("Kotlin2")
+    fun postRequest(@RequestBody request: Request): Language {
+        val restTemplate = RestTemplate()
+        val language = restTemplate.getForObject(request.url, Language::class.java)
+
+        //return Language(language.language)
+        return language
+    }
 }
