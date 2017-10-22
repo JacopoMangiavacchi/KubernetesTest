@@ -5,14 +5,14 @@ Implementation of the same Rest microservice in the following languages/platform
 
 - Swift: Kitura
 - Javascript: Node.JS
+- TypeScript: Node.JS
 - Python: Flask
 - Python: Sanic
 - Java: Spring
+- Kotlin: Spring
 - Scala: Spray, Akka
 - Go: Gorilla Mux
-- Kotlin: Spring
 - C#: .Net WebApi
-- TypeScript: Node.JS
 
 
 Each of these services expose the following API
