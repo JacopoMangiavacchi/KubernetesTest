@@ -1,7 +1,6 @@
 import Foundation
 import Kitura
 
-
 struct Language : Codable {
     var language: String
 }
@@ -10,11 +9,8 @@ struct Request : Codable {
     var url: String
 }
 
-
-// Create a new router
 let router = Router()
 
-// Handle HTTP GET requests to /
 router.get("/language") { request, response, next in
     let language = Language(language: "Swift")
 
@@ -22,7 +18,6 @@ router.get("/language") { request, response, next in
     next()
 }
 
-// Handle HTTP POST requests to /
 router.all("/request", middleware: BodyParser())
 router.post("/request") { request, response, next in
     guard let parsedBody = request.body else {
@@ -46,8 +41,6 @@ router.post("/request") { request, response, next in
                         if httpStatus.statusCode == 200 {
                             do {
                                 try response.status(.OK).send(data: data).end()
-
-                                //unmarshal from data to json and marshal again from json to data
                                 // let language = try JSONDecoder().decode(Language.self, from: data)
                                 // try response.status(.OK).send(data: JSONEncoder().encode(language)).end()
                             }
@@ -67,8 +60,6 @@ router.post("/request") { request, response, next in
     }
 }
 
-// Add an HTTP server and connect it to the router
 Kitura.addHTTPServer(onPort: 8080, with: router)
 
-// Start the Kitura runloop (this call never returns)
 Kitura.run()

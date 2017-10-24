@@ -51,7 +51,6 @@ class Request {
 
 @SpringBootApplication
 public class Application {
-
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(Application.class);
         System.getProperties().put( "server.port", 8060);
@@ -61,7 +60,6 @@ public class Application {
 
 @RestController
 class LanguageController {
-
     @RequestMapping("/language")
     public Language language() {
         return new Language("Java");
@@ -74,4 +72,3 @@ class LanguageController {
         return new Language(language.getLanguage());
     }
 }
-

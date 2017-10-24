@@ -33,7 +33,6 @@ func HandleLanguage(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleRequest(w http.ResponseWriter, r *http.Request) {
-    // Unmarshal the Json Body in a Request type
     var request Request
     body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
     if err != nil {
@@ -43,41 +42,28 @@ func HandleRequest(w http.ResponseWriter, r *http.Request) {
         panic(err)
     }
     if err := json.Unmarshal(body, &request); err != nil {
-        w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-        w.WriteHeader(422) // unprocessable entity
-        if err := json.NewEncoder(w).Encode(err); err != nil {
-            panic(err)
-        }
+        panic(err)
     }
 
-    // Build the request
 	req, err := http.NewRequest("GET", request.Url, nil)
 	if err != nil {
-		log.Fatal("NewRequest: ", err)
-		return
+        panic(err)
 	}
 
 	client := &http.Client{}
 
-	// Send an HTTP request and
-	// returns an HTTP response
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Fatal("Do: ", err)
-		return
+        panic(err)
 	}
 
-	// Defer the closing of the body
 	defer resp.Body.Close()
 
-    // Fill the language response with the data from the JSON
 	var languareResponse Language
 
-    // Use json.Decode for reading streams of JSON data
     if err := json.NewDecoder(resp.Body).Decode(&languareResponse); err != nil {
-        log.Println(err)
+        panic(err)
     }
 
     json.NewEncoder(w).Encode(languareResponse)
 }
-

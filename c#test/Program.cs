@@ -12,6 +12,16 @@ using System.Threading.Tasks;
 
 namespace csharptest
 {
+    class Language
+    {
+        public string language { get; set; }
+    }
+
+    class Request
+    {
+        public string url { get; set; }
+    }
+
     public class Program
     {
         public static void Main(string[] args)
@@ -26,17 +36,7 @@ namespace csharptest
         }
     }
 
-    public class Language
-    {
-        public string language { get; set; }
-    }
-
-    public class Request
-    {
-        public string url { get; set; }
-    }
-
-    public class Startup
+    class Startup
     {
         public void ConfigureServices(IServiceCollection services)
         {
@@ -58,7 +58,6 @@ namespace csharptest
             });
 
             routeBuilder.MapPost("request", async (context) => {
-                //Get JSON Body
                 string bodyAsString;
                 using (var streamReader = new StreamReader(context.Request.Body, Encoding.UTF8))
                 {
@@ -67,11 +66,10 @@ namespace csharptest
 
                 Request request = JsonConvert.DeserializeObject<Request>(bodyAsString);
 
-                //Call GET language url
                 var client = new HttpClient();
                 var stringTask = client.GetStringAsync(request.url);
                 var languageText = await stringTask;
-                // await context.Response.WriteAsync(languageText);
+                await context.Response.WriteAsync(languageText);
 
                 //unmarshal from data to json and marshal again from json to data
                 // var language = JsonConvert.DeserializeObject(languageText);

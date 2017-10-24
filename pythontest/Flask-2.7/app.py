@@ -1,4 +1,3 @@
-#!flask/bin/python
 from flask import Flask, jsonify, abort, request
 import grequests
 
@@ -15,8 +14,6 @@ def create_request():
         abort(400)
     url = request.json['url']
     result = grequests.map([grequests.get(url)])
-    
-    print(result[0].content)
     
     return jsonify({'language': 'Python'})
 

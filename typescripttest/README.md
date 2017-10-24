@@ -1,8 +1,10 @@
-# swifttest
+# typescripttest
 
 
 Local test: 
 
+	tsc
+	
 	node dist/server.js
 
 	curl -H "Content-Type: application/json" -X POST -d '{"url" : "http://localhost:8020/language"}' http://localhost:8020/request

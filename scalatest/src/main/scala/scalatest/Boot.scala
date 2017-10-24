@@ -1,5 +1,11 @@
-package com.example
+package scalatest
 
+import akka.actor.{ActorSystem, Props}
+import akka.io.IO
+import spray.can.Http
+import akka.pattern.ask
+import akka.util.Timeout
+import scala.concurrent.duration._
 import akka.actor.Actor
 import spray.routing._
 import spray.http._
@@ -13,17 +19,17 @@ import spray.httpx.encoding.{Deflate}
 import scala.util.{Failure, Success}
 
 
-// we don't implement our route structure directly in the service actor because
-// we want to be able to test it independently, without having to spin up an actor
+object Boot extends App {
+  implicit val system = ActorSystem("on-spray-can")
+
+  val service = system.actorOf(Props[MyServiceActor], "demo-service")
+
+  implicit val timeout = Timeout(5.seconds)
+  IO(Http) ? Http.Bind(service, interface = "localhost", port = 8050)
+}
+
 class MyServiceActor extends Actor with MyService {
-
-  // the HttpService trait defines only one abstract member, which
-  // connects the services environment to the enclosing actor or test
   def actorRefFactory = context
-
-  // this actor only runs our route, but you could add
-  // other things here, like request stream processing
-  // or timeout handling
   def receive = runRoute(myRoute)
 }
 
@@ -37,11 +43,10 @@ object MyServiceJsonSupport extends DefaultJsonProtocol with SprayJsonSupport {
 
 import MyServiceJsonSupport._
 
-// this trait defines our service behavior independently from the service actor
 trait MyService extends HttpService {
 
   val system = akka.actor.ActorSystem()
-  import system.dispatcher // execution context for futures
+  import system.dispatcher
 
   val myRoute =
     path("language") {
