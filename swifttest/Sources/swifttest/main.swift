@@ -27,23 +27,12 @@ router.post("/request") { request, response, next in
             req.httpMethod = "GET"
             
             let dataTask = URLSession.shared.dataTask(with: req, completionHandler: { (data, getResponse, error) in
-                guard let data = data, error == nil else {
-                    print("Error: \(String(describing: error?.localizedDescription))")
-                    return
+                guard let data = data, error == nil else { return }
+                if let httpStatus = getResponse as? HTTPURLResponse, httpStatus.statusCode == 200 {
+                    try? response.status(.OK).send(data: data).end()
+                    // let language = try? JSONDecoder().decode(Language.self, from: data)
+                    // try? response.status(.OK).send(data: JSONEncoder().encode(language)).end()
                 }
-                
-                if let httpStatus = getResponse as? HTTPURLResponse {
-                    if httpStatus.statusCode == 200 {
-                        do {
-                            try response.status(.OK).send(data: data).end()
-                            // let language = try JSONDecoder().decode(Language.self, from: data)
-                            // try response.status(.OK).send(data: JSONEncoder().encode(language)).end()
-                        }
-                        catch {
-                        }
-                    }
-                }
-
                 next()
             })
             
@@ -54,65 +43,38 @@ router.post("/request") { request, response, next in
     }
 }
 
-router.all("/requestParser", middleware: BodyParser())
-router.post("/requestParser") { request, response, next in
-    guard let parsedBody = request.body else {
-        next()
-        return
-    }
+// router.all("/requestParser", middleware: BodyParser())
+// router.post("/requestParser") { request, response, next in
+//     guard let parsedBody = request.body else {
+//         next()
+//         return
+//     }
 
-    switch(parsedBody) {
-    case .json(let jsonBody):
-            if let urlString = jsonBody["url"].string, let url = URL(string: urlString) {
-                var request = URLRequest(url: url)
-                request.httpMethod = "GET"
+//     switch(parsedBody) {
+//     case .json(let jsonBody):
+//             if let urlString = jsonBody["url"].string, let url = URL(string: urlString) {
+//                 var request = URLRequest(url: url)
+//                 request.httpMethod = "GET"
                 
-                let dataTask = URLSession.shared.dataTask(with: request, completionHandler: { (data, getResponse, error) in
-                    guard let data = data, error == nil else {
-                        print("Error: \(String(describing: error?.localizedDescription))")
-                        return
-                    }
+//                 let dataTask = URLSession.shared.dataTask(with: request, completionHandler: { (data, getResponse, error) in
+//                     guard let data = data, error == nil else { return }
                     
-                    if let httpStatus = getResponse as? HTTPURLResponse {
-                        if httpStatus.statusCode == 200 {
-                            do {
-                                try response.status(.OK).send(data: data).end()
-                                // let language = try JSONDecoder().decode(Language.self, from: data)
-                                // try response.status(.OK).send(data: JSONEncoder().encode(language)).end()
-                            }
-                            catch {
-                            }
-                        }
-                    }
+//                     if let httpStatus = getResponse as? HTTPURLResponse, httpStatus.statusCode == 200 {
+//                         try? response.status(.OK).send(data: data).end()
+//                         // let language = try? JSONDecoder().decode(Language.self, from: data)
+//                         // try? response.status(.OK).send(data: JSONEncoder().encode(language)).end()
+//                     }
 
-                    next()
-                })
+//                     next()
+//                 })
                 
-                dataTask.resume()
-            }
-    default:
-        next()
-        break
-    }
-}
-
-struct Name: Codable {
-   let name: String
-}
-
-router.post("/") { request, response, next in
-    do {
-        var data = Data()
-        if try request.read(into: &data) > 0 {
-            let name: Name = try JSONDecoder().decode(Name.self, from: data)
-            try response.status(.OK).send(data: JSONEncoder().encode(name)).end()
-        }
-    }
-    catch {
-    }
-}
-
-
+//                 dataTask.resume()
+//             }
+//     default:
+//         next()
+//         break
+//     }
+// }
 
 
 
